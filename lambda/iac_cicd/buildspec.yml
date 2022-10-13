@@ -1,0 +1,26 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - python3 --version
+      - wget https://github.com/aws/aws-sam-cli/releases/latest/download/aws-sam-cli-linux-x86_64.zip
+      - sha256sum aws-sam-cli-linux-x86_64.zip
+      - unzip aws-sam-cli-linux-x86_64.zip -d sam-installation
+    on-failure: ABORT
+  pre_build:
+    commands:
+      - ./sam-installation/install
+      - sam --version
+    finally:
+      - echo finally
+    on-failure: ABORT
+  build:
+    commands:
+      - sam build
+    finally:
+      - echo finally
+    on-failure: ABORT
+  post_build:
+    commands:
+      - sam deploy
